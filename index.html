@@ -162,17 +162,14 @@
 
         <!-- Search Bar (Mobile View) -->
         <div class="md:hidden relative mb-6">
-            <input type="text" id="mobileSearch" placeholder="Search prompts..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 pl-11 focus:outline-none focus:border-brand-500 text-sm shadow-sm transition">
+            <input type="text" id="mobileSearch" placeholder="Search prompts..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 pl-11 focus:outline-none focus:border-brand-500 text-sm shadow-sm transition shadow-sm">
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 dark:text-slate-500"></i>
         </div>
 
-        <!-- Filters Section -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6" style="scrollbar-width: none;">
+        <!-- Filters Section (Injected dynamically from Database categories) -->
+        <div id="categoryFiltersContainer" class="flex items-center gap-2 overflow-x-auto pb-4 mb-6" style="scrollbar-width: none;">
             <button onclick="filterCategory('All')" class="category-btn bg-brand-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition">All Prompts</button>
-            <button onclick="filterCategory('Viral')" class="category-btn bg-white border border-slate-200 hover:border-brand-500 dark:bg-slate-900 dark:border-slate-800 dark:hover:border-brand-500 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition text-slate-950 dark:text-slate-100">Viral</button>
-            <button onclick="filterCategory('IG Trend')" class="category-btn bg-white border border-slate-200 hover:border-brand-500 dark:bg-slate-900 dark:border-slate-800 dark:hover:border-brand-500 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition text-slate-950 dark:text-slate-100">IG Trend</button>
-            <button onclick="filterCategory('Boys')" class="category-btn bg-white border border-slate-200 hover:border-brand-500 dark:bg-slate-900 dark:border-slate-800 dark:hover:border-brand-500 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition text-slate-950 dark:text-slate-100">Boys</button>
-            <button onclick="filterCategory('Girls')" class="category-btn bg-white border border-slate-200 hover:border-brand-500 dark:bg-slate-900 dark:border-slate-800 dark:hover:border-brand-500 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition text-slate-950 dark:text-slate-100">Girls</button>
+            <!-- Injected Category Buttons -->
         </div>
 
         <!-- Section: Prompts Grid -->
@@ -181,8 +178,16 @@
                 <h2 id="sectionTitle" class="text-xl font-bold">Featured Prompts</h2>
                 <span class="text-xs text-slate-500" id="promptsCount">0 prompts found</span>
             </div>
+            
             <div id="promptsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="col-span-full py-12 text-center text-slate-500">Loading prompts...</div>
+            </div>
+
+            <!-- Pagination Layout Elements (Exact visual replica of user request) -->
+            <div id="paginationControls" class="flex justify-center items-center gap-3 mt-8 hidden">
+                <button onclick="changePage(-1)" id="btnPrev" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl text-xs font-bold transition">➔ Prev</button>
+                <span id="pageNumber" class="bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-xl text-xs font-bold font-mono">1 / 2</span>
+                <button onclick="changePage(1)" id="btnNext" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl text-xs font-bold transition">Next ➔</button>
             </div>
         </section>
 
@@ -202,7 +207,7 @@
                     </div>
 
                     <!-- Deposit Guide -->
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
                         <h3 class="font-bold text-md text-brand-500">EasyPaisa / JazzCash</h3>
                         <p class="text-xs text-slate-500 dark:text-slate-400">Please pay to Nazim Mustafa directly using the number details given below and save the screenshot receipt.</p>
                         <div class="bg-slate-100 dark:bg-slate-950 p-4 rounded-xl space-y-2">
@@ -219,7 +224,7 @@
                 </div>
 
                 <!-- Proof of purchase submission -->
-                <div class="flex-1 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
+                <div class="flex-1 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                     <h3 class="font-bold text-lg mb-2">Buy Coins</h3>
                     <p class="text-xs text-slate-500 mb-4">Submit deposit details below for manual and auto coin additions.</p>
                     <form id="purchaseCoinsForm" class="space-y-4">
@@ -242,21 +247,47 @@
             </div>
 
             <!-- Transaction History -->
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
-                <h3 class="font-bold text-md mb-4"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Transaction History</h3>
-                <div class="overflow-x-auto text-xs">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 class="font-bold text-md flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500"></i> Wallet Statements</h3>
+                    <div class="flex gap-2">
+                        <button onclick="switchHistoryTab('credits')" id="tabCredits" class="px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-bold transition">Deposit History (Credits)</button>
+                        <button onclick="switchHistoryTab('debits')" id="tabDebits" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 text-xs font-bold transition">Unlock History (Debits)</button>
+                    </div>
+                </div>
+                
+                <!-- Deposit Credits List Table -->
+                <div id="tableCredits" class="overflow-x-auto text-xs">
                     <table class="w-full text-left text-slate-600 dark:text-slate-300">
                         <thead>
                             <tr class="bg-slate-100 dark:bg-slate-950 text-slate-500 uppercase text-[10px]">
-                                <th class="px-4 py-2">Transaction ID / TID</th>
-                                <th class="px-4 py-2">Sender Info</th>
-                                <th class="px-4 py-2">Coins Amount</th>
-                                <th class="px-4 py-2">Payment Status</th>
+                                <th class="px-4 py-2.5">Transaction ID / TID</th>
+                                <th class="px-4 py-2.5">Sender Details</th>
+                                <th class="px-4 py-2.5">Coins Amount</th>
+                                <th class="px-4 py-2.5">Status</th>
                             </tr>
                         </thead>
                         <tbody id="userTransactionsList">
                             <tr>
                                 <td colspan="4" class="text-center py-4 text-slate-400">Please login to view history.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Debits Unlocks Log History Table -->
+                <div id="tableDebits" class="overflow-x-auto text-xs hidden">
+                    <table class="w-full text-left text-slate-600 dark:text-slate-300">
+                        <thead>
+                            <tr class="bg-slate-100 dark:bg-slate-950 text-slate-500 uppercase text-[10px]">
+                                <th class="px-4 py-2.5">Unlocked Prompt</th>
+                                <th class="px-4 py-2.5">Deducted Balance</th>
+                                <th class="px-4 py-2.5">Date / Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userPurchaseList">
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-slate-400">No premium unlock records yet.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -269,10 +300,11 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <div>
                     <h1 class="text-2xl font-bold text-red-500">Admin Console</h1>
-                    <p class="text-xs text-slate-400">Manage database prompts and verify user payment approvals</p>
+                    <p class="text-xs text-slate-400">Manage database prompts, custom categories, and verify user payments</p>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="toggleAdminTab('addPrompt')" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition">Add/Edit Prompt</button>
+                    <button onclick="toggleAdminTab('categories')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition">Manage Categories</button>
                     <button onclick="toggleAdminTab('payments')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition">Verify Payments</button>
                 </div>
             </div>
@@ -290,18 +322,20 @@
                         <div>
                             <label class="block text-xs text-slate-400 mb-1">Category / Tag</label>
                             <select id="pCategory" class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
-                                <option value="Viral">Viral</option>
-                                <option value="IG Trend">IG Trend</option>
-                                <option value="Boys">Boys</option>
-                                <option value="Girls">Girls</option>
+                                <!-- Dynamic Options -->
                             </select>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">Card Image URL (Paste link directly)</label>
-                        <input type="text" id="pImageURL" placeholder="Paste Pinterest, Unsplash, or ImgBB Image Link" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
-                        <p class="text-[10px] text-slate-400 mt-1">Aap kisi bhi image ka direct link paste kar sakte hain. Firebase Storage use nahi hoga.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Card Image URL (Paste link directly)</label>
+                            <input type="text" id="pImageURL" placeholder="Paste Pinterest, Unsplash, or ImgBB Image Link" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Starting / Initial Views count (Works on Free + Paid)</label>
+                            <input type="number" id="pInitialViews" value="0" min="0" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                        </div>
                     </div>
 
                     <div>
@@ -334,10 +368,28 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-2 rounded-lg text-sm transition">Save Prompt</button>
+                        <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-2 rounded-lg text-sm transition shadow-sm">Save Prompt</button>
                         <button type="button" onclick="resetForm()" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm transition">Reset Form</button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Manage Dynamic Categories Console -->
+            <div id="adminCategoriesTab" class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 hidden shadow-sm">
+                <h3 class="text-lg font-bold mb-2">Manage Custom Categories</h3>
+                <p class="text-xs text-slate-400 mb-4">Add or delete filters that appear dynamically in navigation and forms</p>
+                
+                <div class="flex gap-2 max-w-md mb-6">
+                    <input type="text" id="newCategoryInput" placeholder="e.g. Couples, Islamic, Festival" class="flex-1 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                    <button onclick="addNewCategory()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow-sm">Add Category</button>
+                </div>
+
+                <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 mb-3">Active Categories list</h4>
+                    <div id="adminCategoryList" class="flex flex-wrap gap-2 text-xs">
+                        <!-- Categories dynamically listed here -->
+                    </div>
+                </div>
             </div>
 
             <!-- Verify Payments Screen -->
@@ -384,15 +436,15 @@
 
     <!-- MODAL: Prompt Detail Page -->
     <div id="promptDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative p-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative p-6 shadow-md">
             <button onclick="closePromptDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div>
-                    <img id="detailImg" src="" alt="Prompt preview" class="w-full h-64 object-cover rounded-xl border border-slate-200 dark:border-slate-800">
-                    <a id="downloadBtn" href="#" target="_blank" download class="w-full block text-center mt-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 py-2 rounded-lg text-xs font-semibold transition text-slate-950 dark:text-white">
+                    <img id="detailImg" src="" alt="Prompt preview" class="w-full h-auto max-h-96 object-cover rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <a id="downloadBtn" href="#" target="_blank" download class="w-full block text-center mt-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 py-2 rounded-lg text-xs font-semibold transition text-slate-950 dark:text-white shadow-sm">
                         <i class="fa-solid fa-download mr-1"></i> Save Image
                     </a>
                 </div>
@@ -406,7 +458,7 @@
                         <h2 id="detailTitle" class="text-xl font-bold mb-3 text-slate-950 dark:text-white">Prompt Title</h2>
 
                         <div id="promptContentArea" class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 rounded-xl min-h-[140px] flex flex-col justify-between relative overflow-hidden">
-                            <!-- Premium blur screen overlay -->
+                            <!-- Premium blur screen overlay (Kept as backup overlay rendering) -->
                             <div id="lockedOverlay" class="absolute inset-0 bg-slate-50/98 dark:bg-slate-950/98 backdrop-blur-md flex flex-col items-center justify-center p-4 text-center hidden">
                                 <i class="fa-solid fa-lock text-amber-500 text-3xl mb-2"></i>
                                 <span class="text-xs font-bold uppercase text-slate-400">Premium Locked Content</span>
@@ -414,8 +466,8 @@
                                 <button onclick="buyPrompt()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-4 py-1.5 rounded-lg mt-2 transition shadow-sm">Unlock Now</button>
                             </div>
                             
-                            <p id="detailPromptText" class="text-sm text-slate-800 dark:text-slate-300 font-mono select-all">Loading prompt...</p>
-                            <button onclick="copyToClipboard()" class="self-end mt-4 bg-slate-200 dark:bg-slate-850 hover:bg-slate-300 dark:hover:bg-slate-800 text-xs px-3 py-1.5 rounded-md text-brand-500 transition font-sans">
+                            <p id="detailPromptText" class="text-sm text-slate-800 dark:text-slate-300 font-mono select-all leading-relaxed">Loading prompt...</p>
+                            <button onclick="copyToClipboard()" class="self-end mt-4 bg-slate-200 dark:bg-slate-850 hover:bg-slate-300 dark:hover:bg-slate-800 text-xs px-3 py-1.5 rounded-md text-brand-500 transition font-sans shadow-sm">
                                 <i class="fa-regular fa-copy mr-1"></i> Copy Prompt
                             </button>
                         </div>
@@ -427,7 +479,7 @@
 
     <!-- MODAL: Authentication -->
     <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm relative p-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm relative p-6 shadow-md">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -453,7 +505,7 @@
 
     <!-- MODAL: Request Prompt -->
     <div id="requestPromptModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md relative p-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md relative p-6 shadow-md">
             <button onclick="closeRequestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -474,7 +526,7 @@
 
     <!-- MODAL: General Info -->
     <div id="infoModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md relative p-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md relative p-6 shadow-md">
             <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -494,9 +546,12 @@
             currentUser: null,
             currentUserData: null,
             promptsList: [],
+            categories: [], // Dynamic Categories List
             currentFilter: 'All',
             isLoginMode: true,
-            currentDetailPrompt: null
+            currentDetailPrompt: null,
+            currentPage: 1,
+            viewMode: 'home' // 'home', 'discover', 'wallet', 'admin'
         };
 
         // Theme Switcher Mode (Instant Loading)
@@ -544,14 +599,16 @@
             document.getElementById('adminView').classList.add('hidden');
             document.getElementById('walletSection').classList.add('hidden');
 
+            window.appState.viewMode = tabId; // Sync state viewmode
+
             if (tabId === 'home' || tabId === 'discover') {
                 document.getElementById('heroSection').classList.remove('hidden');
                 document.getElementById('promptsSection').classList.remove('hidden');
-                if (tabId === 'discover') {
-                    window.appState.currentFilter = 'All';
-                    if (typeof window.filterCategory === 'function') {
-                        window.filterCategory('All');
-                    }
+                
+                // If discover tab clicked, reset category active states to load only trending
+                window.appState.currentPage = 1;
+                if (typeof window.filterCategory === 'function') {
+                    window.filterCategory('All');
                 }
             } else if (tabId === 'admin') {
                 document.getElementById('adminView').classList.remove('hidden');
@@ -563,15 +620,44 @@
 
         // Toggles between inner tabs in admin view
         function toggleAdminTab(tab) {
+            const addTab = document.getElementById('adminAddPromptTab');
+            const catTab = document.getElementById('adminCategoriesTab');
+            const payTab = document.getElementById('adminPaymentsTab');
+
+            addTab.classList.add('hidden');
+            catTab.classList.add('hidden');
+            payTab.classList.add('hidden');
+
             if (tab === 'addPrompt') {
-                document.getElementById('adminAddPromptTab').classList.remove('hidden');
-                document.getElementById('adminPaymentsTab').classList.add('hidden');
+                addTab.classList.remove('hidden');
+            } else if (tab === 'categories') {
+                catTab.classList.remove('hidden');
             } else {
-                document.getElementById('adminAddPromptTab').classList.add('hidden');
-                document.getElementById('adminPaymentsTab').classList.remove('hidden');
+                payTab.classList.remove('hidden');
             }
         }
         window.toggleAdminTab = toggleAdminTab;
+
+        // Toggles between credits/debits statement history tabs inside wallet
+        function switchHistoryTab(type) {
+            const btnCred = document.getElementById('tabCredits');
+            const btnDeb = document.getElementById('tabDebits');
+            const tblCred = document.getElementById('tableCredits');
+            const tblDeb = document.getElementById('tableDebits');
+
+            if (type === 'credits') {
+                btnCred.className = "px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-bold transition";
+                btnDeb.className = "px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 text-xs font-bold transition hover:bg-slate-200 dark:hover:bg-slate-900";
+                tblCred.classList.remove('hidden');
+                tblDeb.classList.add('hidden');
+            } else {
+                btnCred.className = "px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 text-xs font-bold transition hover:bg-slate-200 dark:hover:bg-slate-900";
+                btnDeb.className = "px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-bold transition";
+                tblCred.classList.add('hidden');
+                tblDeb.classList.remove('hidden');
+            }
+        }
+        window.switchHistoryTab = switchHistoryTab;
 
         // Modals layout handlers
         function openRequestModal() {
@@ -706,7 +792,7 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // Professional formatting function for large coins (e.g., 20000 -> 20K, 100000 -> 100K)
+        // Professional formatting function for large coins (e.g., 20000 -> 20K)
         function formatCoins(num) {
             const val = parseInt(num) || 0;
             if (val >= 10000) {
@@ -746,6 +832,7 @@
                     }
                 });
                 syncUserTransactionsHistory();
+                syncUserPurchaseHistory(); // Sync Debits History log
                 triggerAutoApprovalCheck();
             } else {
                 window.appState.currentUser = null;
@@ -754,15 +841,113 @@
                 document.getElementById('adminBtnContainer').classList.add('hidden');
                 document.getElementById('mobileAdminBtn').classList.add('hidden');
                 document.getElementById('userTransactionsList').innerHTML = '<tr><td colspan="4" class="text-center py-4 text-slate-400">Please login to view history.</td></tr>';
+                document.getElementById('userPurchaseList').innerHTML = '<tr><td colspan="3" class="text-center py-4 text-slate-400">Please login to view history.</td></tr>';
             }
         });
 
-        // Sync User Transaction History (No storage dependency, shows TID and Sender Info)
+        // Realtime sync dynamic categories [1]
+        const categoriesRef = ref(db, 'categories');
+        onValue(categoriesRef, (snapshot) => {
+            if (snapshot.exists()) {
+                window.appState.categories = snapshot.val();
+            } else {
+                // Seed default categories if database path is empty
+                const defaultCats = ["Viral", "IG Trend", "Boys", "Girls"];
+                set(categoriesRef, defaultCats);
+                window.appState.categories = defaultCats;
+            }
+            renderCategoryPills(window.appState.categories);
+            renderCategoryDropdown(window.appState.categories);
+            renderAdminCategoryManager(window.appState.categories);
+        });
+
+        // Dynamic category elements uploader
+        function renderCategoryPills(categories) {
+            const container = document.getElementById('categoryFiltersContainer');
+            if(!container) return;
+            container.innerHTML = '';
+
+            // Render Default 'All' Pill
+            const allBtn = document.createElement('button');
+            allBtn.onclick = () => filterCategory('All');
+            allBtn.className = "category-btn bg-brand-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition";
+            allBtn.innerText = "All Prompts";
+            allBtn.id = "btn-cat-All";
+            container.appendChild(allBtn);
+
+            // Render active categories dynamically
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.onclick = () => filterCategory(cat);
+                btn.className = "category-btn bg-white border border-slate-200 hover:border-brand-500 dark:bg-slate-900 dark:border-slate-800 dark:hover:border-brand-500 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition text-slate-950 dark:text-slate-100";
+                btn.innerText = cat;
+                btn.id = `btn-cat-${cat}`;
+                container.appendChild(btn);
+            });
+        }
+
+        // Render dynamic dropdown option categories
+        function renderCategoryDropdown(categories) {
+            const select = document.getElementById('pCategory');
+            if(!select) return;
+            select.innerHTML = '';
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerText = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        // Render dynamic admin manager list view
+        function renderAdminCategoryManager(categories) {
+            const container = document.getElementById('adminCategoryList');
+            if(!container) return;
+            container.innerHTML = '';
+            categories.forEach((cat, index) => {
+                const span = document.createElement('span');
+                span.className = "flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 font-semibold";
+                span.innerHTML = `
+                    <span>${cat}</span>
+                    <button onclick="deleteCategory(${index})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash-can"></i></button>
+                `;
+                container.appendChild(span);
+            });
+        }
+
+        // Add custom category dynamics
+        window.addNewCategory = async function() {
+            const input = document.getElementById('newCategoryInput');
+            const newCatVal = input.value.trim();
+            if(!newCatVal) return;
+
+            if (window.appState.categories.includes(newCatVal)) {
+                alert("Category already exists!");
+                return;
+            }
+
+            const updatedCats = [...window.appState.categories, newCatVal];
+            await set(ref(db, 'categories'), updatedCats);
+            input.value = '';
+            alert("Category added successfully!");
+        };
+
+        // Delete custom category dynamics
+        window.deleteCategory = async function(index) {
+            if (confirm(`Are you sure you want to delete "${window.appState.categories[index]}"?`)) {
+                const updatedCats = window.appState.categories.filter((_, i) => i !== index);
+                await set(ref(db, 'categories'), updatedCats);
+                alert("Category deleted successfully.");
+            }
+        };
+
+        // Sync Credits Deposit History
         function syncUserTransactionsHistory() {
             if (!window.appState.currentUser) return;
             const txRef = ref(db, 'transactions');
             onValue(txRef, (snapshot) => {
                 const list = document.getElementById('userTransactionsList');
+                if(!list) return;
                 list.innerHTML = '';
                 if (snapshot.exists()) {
                     const data = snapshot.val();
@@ -787,6 +972,39 @@
                     }
                 } else {
                     list.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-slate-400">No transactions recorded yet.</td></tr>';
+                }
+            });
+        }
+
+        // Sync Debits / Unlocks Log Purchase History
+        function syncUserPurchaseHistory() {
+            if (!window.appState.currentUser) return;
+            const logRef = ref(db, `purchaseLogs/${window.appState.currentUser.uid}`);
+            onValue(logRef, (snapshot) => {
+                const list = document.getElementById('userPurchaseList');
+                if(!list) return;
+                list.innerHTML = '';
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    let itemsFound = false;
+                    for (let key in data) {
+                        const log = data[key];
+                        itemsFound = true;
+                        const dateStr = new Date(log.timestamp).toLocaleDateString() + ' ' + new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        const tr = document.createElement('tr');
+                        tr.className = "border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900";
+                        tr.innerHTML = `
+                            <td class="px-4 py-3 font-semibold text-slate-900 dark:text-slate-100">${log.promptTitle}</td>
+                            <td class="px-4 py-3 text-red-500 font-bold">-${formatCoins(log.amountCoins)}</td>
+                            <td class="px-4 py-3 text-slate-500 dark:text-slate-400 text-[10px]">${dateStr}</td>
+                        `;
+                        list.appendChild(tr);
+                    }
+                    if (!itemsFound) {
+                        list.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-slate-400">No premium unlock records yet.</td></tr>';
+                    }
+                } else {
+                    list.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-slate-400">No premium unlock records yet.</td></tr>';
                 }
             });
         }
@@ -831,15 +1049,20 @@
             renderPrompts();
         });
 
-        // Render Prompts inside Cards Layout Grid
+        // Fast Load Pagination & Prompts Card rendering (Portrait view with strict pagination visibility checking)
         function renderPrompts() {
             const grid = document.getElementById('promptsGrid');
             const countText = document.getElementById('promptsCount');
+            const pagControls = document.getElementById('paginationControls');
             if(!grid) return;
             grid.innerHTML = '';
 
             let filtered = window.appState.promptsList;
-            if (window.appState.currentFilter !== 'All') {
+
+            // Strict Validation for Discover View Mode Filter
+            if (window.appState.viewMode === 'discover') {
+                filtered = window.appState.promptsList.filter(p => p.isTrending === true);
+            } else if (window.appState.currentFilter !== 'All') {
                 filtered = window.appState.promptsList.filter(p => p.tags === window.appState.currentFilter);
             }
 
@@ -848,6 +1071,7 @@
                 filtered = filtered.filter(p => p.title.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal));
             }
 
+            // Pinned items sorted first
             filtered.sort((a, b) => {
                 if (a.isPinned && !b.isPinned) return -1;
                 if (!a.isPinned && b.isPinned) return 1;
@@ -858,30 +1082,72 @@
 
             if (filtered.length === 0) {
                 grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500">No prompts found matching filter criteria.</div>`;
+                if(pagControls) pagControls.classList.add('hidden');
                 return;
             }
 
-            filtered.forEach(p => {
+            // Slice/Paginate 10 Items max [2]
+            const itemsPerPage = 10;
+            const totalPages = Math.ceil(filtered.length / itemsPerPage);
+            
+            if(window.appState.currentPage > totalPages) {
+                window.appState.currentPage = totalPages || 1;
+            }
+
+            const startIndex = (window.appState.currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedItems = filtered.slice(startIndex, endIndex);
+
+            // Dynamically show/hide pagination buttons based on existence
+            if (filtered.length > itemsPerPage) {
+                if(pagControls) pagControls.classList.remove('hidden');
+                const btnPrev = document.getElementById('btnPrev');
+                const btnNext = document.getElementById('btnNext');
+                const pageNumber = document.getElementById('pageNumber');
+
+                // If on Page 1, hide Previous completely as requested. Else show.
+                if (window.appState.currentPage === 1) {
+                    if(btnPrev) btnPrev.classList.add('hidden');
+                } else {
+                    if(btnPrev) btnPrev.classList.remove('hidden');
+                }
+
+                // If no more pages (at the end), hide Next completely. Else show.
+                if (window.appState.currentPage === totalPages) {
+                    if(btnNext) btnNext.classList.add('hidden');
+                } else {
+                    if(btnNext) btnNext.classList.remove('hidden');
+                }
+
+                if(pageNumber) pageNumber.innerText = `${window.appState.currentPage} / ${totalPages}`;
+            } else {
+                if(pagControls) pagControls.classList.add('hidden');
+            }
+
+            // Rendering high fidelity custom cards with 2:3 aspect-ratio & portrait styling overlay [1]
+            paginatedItems.forEach(p => {
                 const isPaid = p.type === 'paid';
                 const card = document.createElement('div');
-                card.className = "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-brand-500 dark:hover:border-brand-500 transition cursor-pointer group flex flex-col justify-between shadow-sm";
+                card.className = "relative overflow-hidden aspect-[2/3] rounded-[1.5rem] bg-slate-100 dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 transition cursor-pointer group flex flex-col justify-end";
                 card.onclick = () => openPromptDetail(p.id);
 
                 card.innerHTML = `
-                    <div class="relative overflow-hidden aspect-square bg-slate-100 dark:bg-slate-950">
-                        <img src="${p.imageURL || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe'}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <div class="absolute top-2 left-2 flex flex-col gap-1">
-                            ${p.isTrending ? '<span class="bg-red-500 text-[9px] font-bold text-white px-1.5 py-0.5 rounded shadow uppercase">Trending</span>' : ''}
-                            ${p.isPinned ? '<span class="bg-amber-500 text-[9px] font-bold text-slate-950 px-1.5 py-0.5 rounded shadow uppercase">Pinned</span>' : ''}
-                        </div>
-                        <span class="absolute bottom-2 right-2 bg-slate-950/80 backdrop-blur text-[10px] px-2 py-0.5 rounded font-medium text-slate-300">
-                            ${isPaid ? `<span class="text-amber-400 font-bold"><i class="fa-solid fa-coins mr-1"></i>${formatCoins(p.priceCoins)}</span>` : 'Free'}
-                        </span>
+                    <!-- Portrait Image Frame -->
+                    <img src="${p.imageURL || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe'}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    
+                    <!-- Pins & Coins indicator overlays inside absolute corners -->
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                        ${p.isPinned ? '<span class="bg-amber-500 text-[8px] font-extrabold text-slate-950 px-2 py-0.5 rounded-full shadow uppercase">Pinned</span>' : ''}
                     </div>
-                    <div class="p-3">
-                        <h4 class="text-xs font-bold line-clamp-1 group-hover:text-brand-500 transition text-slate-900 dark:text-slate-100">${p.title}</h4>
-                        <div class="flex justify-between items-center mt-2 text-[10px] text-slate-500">
-                            <span><i class="fa-regular fa-eye mr-1"></i>${p.views || 0}</span>
+                    <span class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur text-[8px] px-2.5 py-0.5 rounded-full font-bold text-slate-200">
+                        ${isPaid ? `<span class="text-amber-400"><i class="fa-solid fa-coins mr-1"></i>${formatCoins(p.priceCoins)}</span>` : 'Free'}
+                    </span>
+
+                    <!-- Image Text Overlay (Bottom black gradient block matches screenshot format perfectly) -->
+                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 via-black/45 to-transparent flex flex-col justify-end min-h-[50%] rounded-b-[1.5rem] pointer-events-none">
+                        <h4 class="text-sm font-bold text-white leading-snug line-clamp-2">${p.title}</h4>
+                        <div class="flex justify-between items-center mt-1.5 text-[9px] text-slate-300 font-semibold">
+                            <span><i class="fa-regular fa-eye mr-1"></i>${formatCoins(p.views || 0)} views</span>
                             <span>#${p.tags || 'General'}</span>
                         </div>
                     </div>
@@ -890,7 +1156,14 @@
             });
         }
 
-        // Realtime Payments Fetch for Admin Dashboard (Displays TID and Sender Details)
+        // Change Page Direction handler
+        window.changePage = function(direction) {
+            window.appState.currentPage += direction;
+            renderPrompts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Realtime Payments Fetch for Admin Dashboard
         const transRef = ref(db, 'transactions');
         onValue(transRef, (snapshot) => {
             const list = document.getElementById('adminPaymentsList');
@@ -927,14 +1200,21 @@
         });
 
         // Search inputs listeners
-        document.getElementById('desktopSearch').addEventListener('input', renderPrompts);
-        document.getElementById('mobileSearch').addEventListener('input', renderPrompts);
+        document.getElementById('desktopSearch').addEventListener('input', () => {
+            window.appState.currentPage = 1;
+            renderPrompts();
+        });
+        document.getElementById('mobileSearch').addEventListener('input', () => {
+            window.appState.currentPage = 1;
+            renderPrompts();
+        });
 
         // Filtering prompts category pills
         window.filterCategory = function(cat) {
             window.appState.currentFilter = cat;
+            window.appState.currentPage = 1; // Reset page number on filter switch
             document.querySelectorAll('.category-btn').forEach(btn => {
-                if (btn.innerText.trim() === cat || (cat === 'All' && btn.innerText.trim() === 'All Prompts')) {
+                if (btn.innerText.trim() === cat || (cat === 'All' && btn.innerText.trim() === 'All Prompts') || (btn.id === `btn-cat-${cat}`)) {
                     btn.classList.add('bg-brand-500', 'text-white');
                     btn.classList.remove('bg-white', 'dark:bg-slate-900', 'border-slate-200', 'dark:border-slate-800');
                 } else {
@@ -971,11 +1251,12 @@
             const price = parseInt(document.getElementById('pPrice').value) || 0;
             const isTrending = document.getElementById('pTrending').checked;
             const isPinned = document.getElementById('pPinned').checked;
+            const initialViews = parseInt(document.getElementById('pInitialViews').value) || 0;
 
             try {
                 const promptPayload = {
                     title: title,
-                    imageURL: directUrlInput, // Direct URL paste
+                    imageURL: directUrlInput,
                     description: description,
                     type: type,
                     priceCoins: type === 'paid' ? price : 0,
@@ -983,7 +1264,7 @@
                     isTrending: isTrending,
                     isPinned: isPinned,
                     tags: category,
-                    views: editId ? (window.appState.promptsList.find(p => p.id === editId)?.views || 0) : 0
+                    views: editId ? (parseInt(document.getElementById('pInitialViews').value) || 0) : initialViews
                 };
 
                 if (editId) {
@@ -1013,6 +1294,7 @@
                 document.getElementById('pPrice').value = p.priceCoins || 0;
                 document.getElementById('pTrending').checked = !!p.isTrending;
                 document.getElementById('pPinned').checked = !!p.isPinned;
+                document.getElementById('pInitialViews').value = p.views || 0;
                 togglePriceField();
                 switchTab('admin');
                 toggleAdminTab('addPrompt');
@@ -1057,7 +1339,6 @@
             const dEmail = document.getElementById('userEmailDisplay');
             const mEmail = document.getElementById('mobileEmailDisplay');
 
-            // Format coins representation safely (e.g., 20K instead of 20000)
             const formattedValue = formatCoins(coins);
 
             if(dCoin) dCoin.innerText = formattedValue;
@@ -1090,45 +1371,85 @@
             }
         }
 
-        // View Prompt Detail Modal Handler
+        // View Prompt Detail Modal Handler (With Paid Prompt Logic & Confirmation Check)
         window.openPromptDetail = async function(id) {
             const p = window.appState.promptsList.find(item => item.id === id);
             if (!p) return;
 
+            // Strict Validation for Premium / Paid prompt clicks
+            if (p.type === 'paid') {
+                const hasUnlocked = window.appState.currentUserData && window.appState.currentUserData.unlockedPrompts && window.appState.currentUserData.unlockedPrompts[p.id];
+                const isAdmin = window.appState.currentUser && window.appState.currentUser.email === 'kazimmustafa38@gmail.com';
+
+                if (!hasUnlocked && !isAdmin) {
+                    if (!window.appState.currentUser) {
+                        alert("Please log in to purchase premium prompts.");
+                        openAuthModal('login');
+                        return;
+                    }
+
+                    const price = p.priceCoins;
+                    const userCoins = window.appState.currentUserData.coins || 0;
+
+                    if (userCoins < price) {
+                        alert(`Insufficient Coins! This premium prompt costs ${formatCoins(price)} coins. Please buy/deposit coins to proceed.`);
+                        switchTab('wallet');
+                        return;
+                    }
+
+                    // User has enough balance -> trigger transaction deduction instantly on confirm
+                    if (confirm(`Unlock "${p.title}" for ${formatCoins(price)} Coins?`)) {
+                        try {
+                            // 1. Deduct coins via transaction
+                            const userCoinsRef = ref(db, `users/${window.appState.currentUser.uid}/coins`);
+                            await runTransaction(userCoinsRef, (current) => {
+                                return (current || 0) - price;
+                            });
+
+                            // 2. Map unlocked index value
+                            await set(ref(db, `users/${window.appState.currentUser.uid}/unlockedPrompts/${p.id}`), true);
+
+                            // 3. Generate purchase/debit logs statement record
+                            const purchaseLogRef = push(ref(db, `purchaseLogs/${window.appState.currentUser.uid}`));
+                            await set(purchaseLogRef, {
+                                promptId: p.id,
+                                promptTitle: p.title,
+                                amountCoins: price,
+                                timestamp: Date.now()
+                            });
+
+                            alert("Prompt successfully unlocked! Details opened.");
+                        } catch (err) {
+                            alert("Transaction deduction failed: " + err.message);
+                            return;
+                        }
+                    } else {
+                        return; // Cancelled
+                    }
+                }
+            }
+
+            // Normal open details flow for unlocked / free prompts
             window.appState.currentDetailPrompt = p;
             
             const viewsRef = ref(db, `prompts/${id}/views`);
             runTransaction(viewsRef, (curr) => {
-                return (curr || 0) + 1;
+                // If view starts from an admin start value, increment from that starting count
+                return (curr || p.views || 0) + 1;
             });
 
             document.getElementById('detailImg').src = p.imageURL || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe';
             document.getElementById('downloadBtn').href = p.imageURL || '#';
             document.getElementById('detailTitle').innerText = p.title;
-            document.getElementById('detailViews').innerText = (p.views || 0) + 1;
+            document.getElementById('detailViews').innerText = formatCoins((p.views || 0) + 1);
             document.getElementById('detailTag').innerText = p.tags || 'Trending';
 
-            const lockedOverlay = document.getElementById('lockedOverlay');
-            const detailText = document.getElementById('detailPromptText');
-
-            if (p.type === 'paid') {
-                const hasUnlocked = window.appState.currentUserData && window.appState.currentUserData.unlockedPrompts && window.appState.currentUserData.unlockedPrompts[p.id];
-                if (hasUnlocked || (window.appState.currentUser && window.appState.currentUser.email === 'kazimmustafa38@gmail.com')) {
-                    lockedOverlay.classList.add('hidden');
-                    detailText.innerText = p.description;
-                } else {
-                    document.getElementById('lockedPrice').innerText = formatCoins(p.priceCoins);
-                    lockedOverlay.classList.remove('hidden');
-                    detailText.innerText = '•••• •••• •••• •••• •••• ••••';
-                }
-            } else {
-                lockedOverlay.classList.add('hidden');
-                detailText.innerText = p.description;
-            }
+            document.getElementById('lockedOverlay').classList.add('hidden'); // Fully visible unlocked
+            document.getElementById('detailPromptText').innerText = p.description;
 
             if (window.appState.currentUser && window.appState.currentUser.email === 'kazimmustafa38@gmail.com') {
-                detailText.innerHTML += `
-                    <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-850 flex gap-2">
+                document.getElementById('detailPromptText').innerHTML += `
+                    <div class="mt-4 pt-4 border-t border-slate-250 dark:border-slate-850 flex gap-2">
                         <button onclick="editPrompt('${p.id}'); closePromptDetailModal();" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 rounded transition">Edit</button>
                         <button onclick="deletePrompt('${p.id}'); closePromptDetailModal();" class="bg-red-600 hover:bg-red-700 text-white text-[10px] px-2 py-1 rounded transition">Delete</button>
                     </div>
@@ -1149,42 +1470,6 @@
             }
             navigator.clipboard.writeText(text);
             alert("Prompt text copied to clipboard!");
-        }
-
-        // Buy Prompt logic (Deduct Coins)
-        window.buyPrompt = async function() {
-            if (!window.appState.currentUser) {
-                alert("Please log in to purchase premium prompts.");
-                openAuthModal('login');
-                return;
-            }
-            if (!window.appState.currentDetailPrompt) return;
-
-            const price = window.appState.currentDetailPrompt.priceCoins;
-            const userCoins = window.appState.currentUserData.coins || 0;
-
-            if (userCoins < price) {
-                alert("Insufficient Coins. Please visit your wallet and buy more.");
-                closePromptDetailModal();
-                switchTab('wallet');
-                return;
-            }
-
-            if (confirm(`Unlock "${window.appState.currentDetailPrompt.title}" for ${formatCoins(price)} Coins?`)) {
-                try {
-                    const userCoinsRef = ref(db, `users/${window.appState.currentUser.uid}/coins`);
-                    await runTransaction(userCoinsRef, (current) => {
-                        return (current || 0) - price;
-                    });
-
-                    await set(ref(db, `users/${window.appState.currentUser.uid}/unlockedPrompts/${window.appState.currentDetailPrompt.id}`), true);
-
-                    alert("Success! Prompt Unlocked.");
-                    openPromptDetail(window.appState.currentDetailPrompt.id);
-                } catch (err) {
-                    alert("Purchase Failed: " + err.message);
-                }
-            }
         }
 
         // Zero-Storage Deposit Form Submission (Directly writes TID & Mobile Details)
