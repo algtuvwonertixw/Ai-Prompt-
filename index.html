@@ -166,9 +166,9 @@
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 dark:text-slate-500"></i>
         </div>
 
-        <!-- Filters Section (Injected dynamically from Database categories) -->
+        <!-- Filters Section (Dynamic Data Attributes mapping) -->
         <div id="categoryFiltersContainer" class="flex items-center gap-2 overflow-x-auto pb-4 mb-6" style="scrollbar-width: none;">
-            <button onclick="filterCategory('All')" class="category-btn bg-brand-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition">All Prompts</button>
+            <button onclick="filterCategory('All')" data-category="All" class="category-btn bg-brand-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition">All Prompts</button>
             <!-- Injected Category Buttons -->
         </div>
 
@@ -246,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- Transaction History -->
+            <!-- Wallet Statement Tabs System -->
             <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-200 dark:border-slate-800 pb-3">
                     <h3 class="font-bold text-md flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500"></i> Wallet Statements</h3>
@@ -519,7 +519,7 @@
                     <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1">What kind of prompt do you need?</label>
                     <textarea id="reqDesc" rows="4" placeholder="Detail standard, character style, action scenario..." required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 rounded-lg text-sm transition shadow-sm">Send Request</button>
+                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-sm">Send Request</button>
             </form>
         </div>
     </div>
@@ -861,7 +861,7 @@
             renderAdminCategoryManager(window.appState.categories);
         });
 
-        // Dynamic category elements uploader
+        // Dynamic category elements uploader (With robust custom data attributes)
         function renderCategoryPills(categories) {
             const container = document.getElementById('categoryFiltersContainer');
             if(!container) return;
@@ -872,7 +872,7 @@
             allBtn.onclick = () => filterCategory('All');
             allBtn.className = "category-btn bg-brand-500 text-white px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition";
             allBtn.innerText = "All Prompts";
-            allBtn.id = "btn-cat-All";
+            allBtn.setAttribute('data-category', 'All');
             container.appendChild(allBtn);
 
             // Render active categories dynamically
@@ -881,7 +881,7 @@
                 btn.onclick = () => filterCategory(cat);
                 btn.className = "category-btn bg-white border border-slate-200 hover:border-brand-500 dark:bg-slate-900 dark:border-slate-800 dark:hover:border-brand-500 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition text-slate-950 dark:text-slate-100";
                 btn.innerText = cat;
-                btn.id = `btn-cat-${cat}`;
+                btn.setAttribute('data-category', cat);
                 container.appendChild(btn);
             });
         }
@@ -1209,12 +1209,14 @@
             renderPrompts();
         });
 
-        // Filtering prompts category pills
+        // Filtering prompts category pills (Fully optimized to render instantly without reload)
         window.filterCategory = function(cat) {
             window.appState.currentFilter = cat;
-            window.appState.currentPage = 1; // Reset page number on filter switch
+            window.appState.currentPage = 1; // Reset page bounds on filter swap
+            
+            // Loop with strict data-category selection matching
             document.querySelectorAll('.category-btn').forEach(btn => {
-                if (btn.innerText.trim() === cat || (cat === 'All' && btn.innerText.trim() === 'All Prompts') || (btn.id === `btn-cat-${cat}`)) {
+                if (btn.getAttribute('data-category') === cat) {
                     btn.classList.add('bg-brand-500', 'text-white');
                     btn.classList.remove('bg-white', 'dark:bg-slate-900', 'border-slate-200', 'dark:border-slate-800');
                 } else {
@@ -1239,7 +1241,7 @@
             }
         }
 
-        // Save Prompt (Admin form submission handler - Zero Storage dependencies, saves direct link)
+        // Save Prompt (Admin form submission handler - Zero Storage dependencies, redirects auto)
         document.getElementById('promptForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const editId = document.getElementById('editPromptId').value;
@@ -1276,6 +1278,7 @@
                     alert("New Prompt created successfully!");
                 }
                 resetForm();
+                switchTab('home'); // Auto-redirect without page reload
             } catch (err) {
                 alert("Failed saving prompt: " + err.message);
             }
