@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -331,8 +332,12 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs text-slate-400 mb-1">Card Image URL (Paste link directly)</label>
-                            <input type="text" id="pImageURL" placeholder="Paste Pinterest, Unsplash, or ImgBB Image Link" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                            <label class="block text-xs text-slate-400 mb-1">Image File Name (from /images/ folder)</label>
+                            <div class="space-y-2">
+                                <input type="text" id="pImageURL" list="githubImagesList" placeholder="e.g. logo.png" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                                <datalist id="githubImagesList"></datalist>
+                                <span id="githubApiStatus" class="block text-[10px] text-brand-500 font-semibold"></span>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-xs text-slate-400 mb-1">Starting / Initial Views count (Works on Free + Paid)</label>
@@ -382,7 +387,7 @@
                 <p class="text-xs text-slate-400 mb-4">Add or delete filters that appear dynamically in navigation and forms</p>
                 
                 <div class="flex gap-2 max-w-md mb-6">
-                    <input type="text" id="newCategoryInput" placeholder="e.g. Couples, Islamic, Festival" class="flex-1 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                    <input type="text" id="newCategoryInput" placeholder="e.g. Couples, Islamic, Festival" class="flex-1 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-955 dark:text-white transition">
                     <button onclick="addNewCategory()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow-sm">Add Category</button>
                 </div>
 
@@ -402,7 +407,7 @@
                 <div class="space-y-4 max-w-md">
                     <div>
                         <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1">PromptKaro API Engine Key</label>
-                        <input type="password" id="adminApiKeyInput" placeholder="Enter secure engine API key (AIzaSy...)" class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                        <input type="password" id="adminApiKeyInput" placeholder="Enter secure engine API key (AIzaSy...)" class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-955 dark:text-white transition">
                     </div>
                     <button onclick="saveApiKey()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow-sm">Save Key Configurations</button>
                 </div>
@@ -459,7 +464,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div>
-                    <img id="detailImg" src="" alt="Prompt preview" class="w-full h-auto max-h-96 object-cover rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <img id="detailImg" src="" alt="Prompt preview" class="w-full h-auto max-h-96 object-cover rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe';">
                     <a id="downloadBtn" href="#" target="_blank" download class="w-full block text-center mt-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 py-2 rounded-lg text-xs font-semibold transition text-slate-950 dark:text-white shadow-sm">
                         <i class="fa-solid fa-download mr-1"></i> Save Image
                     </a>
@@ -507,7 +512,7 @@
                     <!-- Dynamic form selectors matching exact prompt customization formula -->
                     <div>
                         <label class="block text-[10px] text-slate-400 mb-1">Style Select</label>
-                        <select id="aiStyle" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-950 dark:text-white focus:outline-none focus:border-brand-500 transition">
+                        <select id="aiStyle" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-955 dark:text-white focus:outline-none focus:border-brand-500 transition">
                             <option value="Cinematic">Cinematic</option>
                             <option value="Anime/Illustration">Anime</option>
                             <option value="Ultra-Realistic">Realistic</option>
@@ -516,7 +521,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] text-slate-400 mb-1">Variation / Lighting</label>
-                        <select id="aiLighting" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-950 dark:text-white focus:outline-none focus:border-brand-500 transition">
+                        <select id="aiLighting" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-955 dark:text-white focus:outline-none focus:border-brand-500 transition">
                             <option value="Dramatic High-Contrast">Dramatic High-Contrast</option>
                             <option value="Warm Golden Hour">Warm Golden Hour</option>
                             <option value="Moody Cinematic Dark">Moody Cinematic Dark</option>
@@ -525,14 +530,14 @@
                     </div>
                     <div>
                         <label class="block text-[10px] text-slate-400 mb-1">Prompt Length</label>
-                        <select id="aiLength" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-950 dark:text-white focus:outline-none focus:border-brand-500 transition">
+                        <select id="aiLength" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-955 dark:text-white focus:outline-none focus:border-brand-500 transition">
                             <option value="Detailed Prompt">Detailed Prompt</option>
                             <option value="Short Prompt">Short Prompt</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[10px] text-slate-400 mb-1">Strength Level</label>
-                        <select id="aiStrength" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-950 dark:text-white focus:outline-none focus:border-brand-500 transition">
+                        <select id="aiStrength" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded px-2 py-1.5 text-slate-955 dark:text-white focus:outline-none focus:border-brand-500 transition">
                             <option value="Insane Detail (Max Quality)">Insane Detail (Pro)</option>
                             <option value="Basic Enhancement">Basic Enhancement</option>
                         </select>
@@ -569,11 +574,11 @@
             <form id="authForm" class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1">Email Address</label>
-                    <input type="email" id="authEmail" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                    <input type="email" id="authEmail" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-955 dark:text-white transition">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1">Password</label>
-                    <input type="password" id="authPassword" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                    <input type="password" id="authPassword" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-955 dark:text-white transition">
                 </div>
                 <button type="submit" id="authSubmitBtn" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 rounded-lg text-sm transition shadow-sm">Login</button>
             </form>
@@ -594,11 +599,11 @@
             <form id="requestForm" class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1">Your Name / Email</label>
-                    <input type="text" id="reqEmail" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition">
+                    <input type="text" id="reqEmail" required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-955 dark:text-white transition">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1">What kind of prompt do you need?</label>
-                    <textarea id="reqDesc" rows="4" placeholder="Detail standard, character style, action scenario..." required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-950 dark:text-white transition"></textarea>
+                    <textarea id="reqDesc" rows="4" placeholder="Detail standard, character style, action scenario..." required class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 text-slate-955 dark:text-white transition"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-sm">Send Request</button>
             </form>
@@ -622,6 +627,23 @@
     <!-- PART 1: STANDARD SYNCHRONOUS GLOBAL JAVASCRIPT -->
     <!-- ========================================== -->
     <script>
+        // Predefined Base URL for GitHub Raw Images [1]
+        const GITHUB_BASE_URL = "https://raw.githubusercontent.com/freeearningsonline/Ai-Prompt-/main/images/";
+        
+        // Helper function to resolve dynamic image paths with fallback check
+        function resolveImageSrc(imageVal) {
+            if (!imageVal) {
+                return "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe"; // standard default placeholder
+            }
+            // If the saved value is already a full absolute URL (backward compatibility)
+            if (imageVal.startsWith("http://") || imageVal.startsWith("https://") || imageVal.startsWith("data:")) {
+                return imageVal;
+            }
+            // If it's just a file name (e.g. logo.png), prepend GitHub Base URL
+            return GITHUB_BASE_URL + imageVal;
+        }
+        window.resolveImageSrc = resolveImageSrc;
+
         // Shared global application state
         window.appState = {
             currentUser: null,
@@ -732,6 +754,10 @@
                 }
             } else if (tabId === 'admin') {
                 document.getElementById('adminView').classList.remove('hidden');
+                // Trigger auto-fetching images from GitHub when opening Admin console
+                if (typeof window.fetchGitHubImages === 'function') {
+                    window.fetchGitHubImages();
+                }
             } else if (tabId === 'wallet') {
                 document.getElementById('walletSection').classList.remove('hidden');
             }
@@ -1015,6 +1041,55 @@
             await set(ref(db, 'settings/geminiApiKey'), keyVal);
             alert("AI API Key updated securely.");
         };
+
+        // Dynamic API Call to fetch files listed in GitHub /images/ directory [7]
+        async function fetchGitHubImages() {
+            const datalist = document.getElementById('githubImagesList');
+            const statusSpan = document.getElementById('githubApiStatus');
+            if (!datalist) return;
+
+            if (statusSpan) {
+                statusSpan.innerText = "🔄 Syncing /images/ list from GitHub...";
+                statusSpan.className = "block text-[10px] text-amber-500 font-semibold";
+            }
+
+            try {
+                // Fetching folder content dynamically using public GitHub content API
+                const response = await fetch("https://api.github.io/repos/freeearningsonline/Ai-Prompt-/contents/images");
+                if (response.ok) {
+                    const data = await response.json();
+                    datalist.innerHTML = ''; // Clear prior suggestions
+                    let count = 0;
+
+                    data.forEach(item => {
+                        // Accept standard image formats [6]
+                        if (item.type === 'file' && /\.(jpg|jpeg|png|webp|gif)$/i.test(item.name)) {
+                            const option = document.createElement('option');
+                            option.value = item.name;
+                            datalist.appendChild(option);
+                            count++;
+                        }
+                    });
+
+                    if (statusSpan) {
+                        statusSpan.innerText = `✅ Found ${count} images in GitHub /images/ folder.`;
+                        statusSpan.className = "block text-[10px] text-emerald-500 font-semibold";
+                    }
+                } else {
+                    if (statusSpan) {
+                        statusSpan.innerText = "⚠️ GitHub folder empty or offline. Enter filename manually.";
+                        statusSpan.className = "block text-[10px] text-rose-500 font-semibold";
+                    }
+                }
+            } catch (err) {
+                console.warn("GitHub contents API offline: ", err);
+                if (statusSpan) {
+                    statusSpan.innerText = "⚠️ GitHub rate limit reached. Type file name manually.";
+                    statusSpan.className = "block text-[10px] text-rose-500/80 font-semibold";
+                }
+            }
+        }
+        window.fetchGitHubImages = fetchGitHubImages;
 
         // Track user Auth states changes
         onAuthStateChanged(auth, async (user) => {
@@ -1336,9 +1411,12 @@
                 card.className = "relative overflow-hidden aspect-[2/3] rounded-[1.5rem] bg-slate-100 dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 transition cursor-pointer group flex flex-col justify-end text-slate-100";
                 card.onclick = () => openPromptDetail(p.id);
 
+                // Dynamically resolve image file path or URL [5]
+                const resolvedImgUrl = resolveImageSrc(p.imageURL);
+
                 card.innerHTML = `
-                    <!-- Portrait Image Frame -->
-                    <img src="${p.imageURL || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe'}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <!-- Portrait Image Frame with fallback image handler [6] -->
+                    <img src="${resolvedImgUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe';" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     
                     <!-- Pins & Coins indicator overlays inside absolute corners -->
                     <div class="absolute top-3 left-3 flex flex-col gap-1">
@@ -1446,7 +1524,7 @@
             const editId = document.getElementById('editPromptId').value;
             const title = document.getElementById('pTitle').value;
             const category = document.getElementById('pCategory').value;
-            const directUrlInput = document.getElementById('pImageURL').value.trim();
+            const directUrlInput = document.getElementById('pImageURL').value.trim(); // Reads direct file name input [4]
             const description = document.getElementById('pDescription').value;
             const type = document.getElementById('pType').value;
             const price = parseInt(document.getElementById('pPrice').value) || 0;
@@ -1457,7 +1535,7 @@
             try {
                 const promptPayload = {
                     title: title,
-                    imageURL: directUrlInput,
+                    imageURL: directUrlInput, // Saves either filename or absolute path cleanly
                     description: description,
                     type: type,
                     priceCoins: type === 'paid' ? price : 0,
@@ -1640,8 +1718,16 @@
                 return (curr || p.views || 0) + 1;
             });
 
-            document.getElementById('detailImg').src = p.imageURL || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe';
-            document.getElementById('downloadBtn').href = p.imageURL || '#';
+            // Dynamically resolve details image source with fallback image checking [5, 6]
+            const finalDetailsImg = resolveImageSrc(p.imageURL);
+            const detailImgEl = document.getElementById('detailImg');
+            detailImgEl.src = finalDetailsImg;
+            detailImgEl.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe';
+            };
+
+            document.getElementById('downloadBtn').href = finalDetailsImg || '#';
             document.getElementById('detailTitle').innerText = p.title;
             document.getElementById('detailViews').innerText = formatCoins((p.views || 0) + 1);
             document.getElementById('detailTag').innerText = p.tags || 'Trending';
